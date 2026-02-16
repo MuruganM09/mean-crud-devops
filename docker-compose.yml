@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - mean_network
+
+  backend:
+    image: muruganm09/mean-backend:latest
+    container_name: backend
+    restart: always
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/meandb
+      - PORT=3000
+    depends_on:
+      - mongo
+    networks:
+      - mean_network
+
+  frontend:
+    image: muruganm09/mean-frontend:latest
+    container_name: frontend
+    restart: always
+    depends_on:
+      - backend
+    networks:
+      - mean_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - mean_network
+
+volumes:
+  mongo_data:
+
+networks:
+  mean_network:
+    driver: bridge
