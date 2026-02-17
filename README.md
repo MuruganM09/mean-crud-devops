@@ -193,6 +193,73 @@ docker-compose ps
 
 ---
 
+# 🔔 CI/CD Auto Trigger — GitHub Webhook + Jenkins
+
+This project uses **GitHub Webhooks** to automatically trigger the Jenkins pipeline whenever code is pushed to the repository.
+
+## ⚙️ Trigger Workflow
+
+```
+Developer Push → GitHub → Webhook → Jenkins Pipeline → Docker Build → Auto Deploy (EC2)
+```
+
+### Jenkins Configuration
+
+1. Open Pipeline:
+
+```
+mean-app-pipeline → Configure
+```
+
+Enable:
+
+```
+☑️ GitHub hook trigger for GITScm polling
+```
+
+Set Jenkins URL:
+
+```
+Manage Jenkins → System → Jenkins URL
+http://13.232.185.205:8081/
+```
+
+---
+
+### GitHub Webhook Setup
+
+```
+Repository → Settings → Webhooks → Add Webhook
+```
+
+```
+Payload URL:
+http://13.232.185.205:8081/github-webhook/
+
+Content Type:
+application/json
+
+Events:
+Just the push event
+```
+
+---
+
+### Verify Trigger
+
+```bash
+git commit --allow-empty -m "trigger pipeline"
+git push origin main
+```
+
+Jenkins build will start automatically:
+
+```
+Started by GitHub push
+```
+
+---
+
 # 🧑‍💻 Source Repository
 
 <p align="center">
@@ -211,6 +278,7 @@ docker-compose ps
 * ✅ MongoDB Persistent Storage
 * ✅ AWS Cloud Deployment
 * ✅ Jenkins CI/CD Automation
+* ✅ GitHub Webhook Auto Trigger
 
 ---
 
@@ -315,6 +383,7 @@ Educational DevOps Project
 * AWS EC2 hosting
 * Nginx reverse proxy architecture
 * Jenkins CI/CD pipeline
+* GitHub webhook automation
 * Production-style DevOps workflow
 
 ---
